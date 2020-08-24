@@ -9,9 +9,7 @@ const TIMEOUT_IN_MILLISECONDS = 30 * 1000;
 const NS_PER_SEC = 1e9;
 const MS_PER_NS = 1e6;
 
-const Tracing = {};
-
-Tracing.request = function (
+const request = function (
   { method = "GET", protocol, hostname, port, path, headers = {}, body } = {},
   callback
 ) {
@@ -93,7 +91,7 @@ Tracing.request = function (
   req.end();
 };
 
-Tracing.getTimings = function (eventTimes) {
+const getTimings = function (eventTimes) {
   var dnsLookup =
     eventTimes.dnsLookupAt !== undefined
       ? getHrTimeDurationInMs(eventTimes.startAt, eventTimes.dnsLookupAt)
@@ -133,7 +131,7 @@ Tracing.getTimings = function (eventTimes) {
   );
 };
 
-Tracing.getHrTimeDurationInMs = function (startTime, endTime) {
+const getHrTimeDurationInMs = function (startTime, endTime) {
   const secondDiff = endTime[0] - startTime[0];
   const nanoSecondDiff = endTime[1] - startTime[1];
   const diffInNanoSecond = secondDiff * NS_PER_SEC + nanoSecondDiff;
@@ -141,7 +139,7 @@ Tracing.getHrTimeDurationInMs = function (startTime, endTime) {
   return diffInNanoSecond / MS_PER_NS;
 };
 
-Tracing.doTiming = function (myurl, myheaders, count) {
+const doTiming = function (myurl, myheaders, count) {
   if (count > 0) {
     request(
       Object.assign(url.parse(myurl), {
@@ -156,4 +154,4 @@ Tracing.doTiming = function (myurl, myheaders, count) {
 };
 // console.log('dnsLookup,tcpConnection,tlsHandshake,firstByte,contentTransfer,total')
 
-module.export = Tracing;
+module.export = doTiming;
