@@ -1,6 +1,6 @@
 "user strict";
 
-const sslChecker = require("ssl-checker");
+var { sslChecker } = require("ssl-checker");
 
 const vet = async (url, results) =>
     await sslChecker(url)
@@ -11,7 +11,14 @@ const vet = async (url, results) =>
     get_list(cfg).map(async (i) => await vet(i, results));
   };
 
+const checkSsl = async (domain) => {
+  return await sslChecker(domain, { method: "GET", port: 443 }).then(
+    console.info
+  );
+};
+
 module.exports = {
+  checkSsl,
   vet,
   get_list,
   vet_list,

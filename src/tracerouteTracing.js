@@ -16,6 +16,4 @@ tracer
     console.log(`close: code ${code}`);
   });
 
-tracer.trace("github.com");
-
-module.exports = tracer;    
+module.exports = tracer;

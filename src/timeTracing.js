@@ -154,4 +154,4 @@ const doTiming = function (myurl, myheaders, count) {
 };
 // console.log('dnsLookup,tcpConnection,tlsHandshake,firstByte,contentTransfer,total')
 
-module.export = doTiming;
+module.exports = doTiming;
