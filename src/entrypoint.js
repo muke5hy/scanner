@@ -1,17 +1,17 @@
 "user strict";
 
 // var request = require('request');
-var doTiming = require("./timeTracing.js");
-var LighthouseReport = require("./lHTracing.js");
-var { checkSsl, vet, get_list, vet_list } = require("./sslTracing.js");
-var tracer = require("./tracerouteTracing.js");
+var doTiming = require("./timeScanner.js");
+var LighthouseReport = require("./lHScanner.js");
+var { getSslDetails, vet, get_list, vet_list } = require("./sslScanner.js");
+var tracer = require("./tracerouteScanner.js");
 
 const start = async () => {
-  const domain = "https://google.com";
-  // doTiming(domain, {}, 3);
-  // LighthouseReport(domain);
-  checkSsl(domain);
-  // tracer.trace("github.com");
+  const domain = "https://tikinfluencers.com";
+  doTiming(domain, {}, 3);
+  LighthouseReport(domain);
+  getSslDetails(domain);
+  tracer.trace(domain);
 };
 
 start();
