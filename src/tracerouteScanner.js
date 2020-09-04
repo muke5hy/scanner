@@ -1,18 +1,18 @@
-const Traceroute = require("nodejs-traceroute");
+const Traceroute = require('nodejs-traceroute');
 
 const tracer = new Traceroute();
 
 tracer
-  .on("pid", (pid) => {
+  .on('pid', (pid) => {
     // console.log(`pid: ${pid}`);
   })
-  .on("destination", (destination) => {
+  .on('destination', (destination) => {
     // console.log(`destination: ${destination}`);
   })
-  .on("hop", (hop) => {
+  .on('hop', (hop) => {
     // console.log(`hop: ${JSON.stringify(hop)}`);
   })
-  .on("close", (code) => {
+  .on('close', (code) => {
     // console.log(`close: code ${code}`);
   });
 

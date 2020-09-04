@@ -1,15 +1,15 @@
-"user strict";
+'user strict';
 
 // var request = require('request');
-var doTiming = require("./TimeScanner.js");
-var LighthouseReport = require("./LHScanner.js");
-var sslScan = require("./SSLScanner.js");
-var tracer = require("./TracerouteScanner.js");
+var doTiming = require('./TimeScanner.js');
+var LighthouseReport = require('./LHScanner.js');
+var sslScan = require('./SSLScanner.js');
+var tracer = require('./TracerouteScanner.js');
 
 const start = async (req) => {
-  const domain = req["domain"];
+  const domain = req['domain'];
   const parser = new URL(domain);
-  const host = parser["host"];
+  const host = parser['host'];
 
   // if (req.time) {
   //   doTiming(domain, {}, 3);
@@ -40,7 +40,7 @@ const start = async (req) => {
 };
 
 req = {
-  domain: "https://tikinfluencers.com",
+  domain: 'https://tikinfluencers.com',
   time: true,
   lighthouse: true,
   ssl: true,

@@ -1,25 +1,19 @@
-"use strict";
+'use strict';
 
-const assert = require("assert");
-const url = require("url");
-const http = require("http");
-const https = require("https");
+const assert = require('assert');
+const url = require('url');
+const http = require('http');
+const https = require('https');
 
 const TIMEOUT_IN_MILLISECONDS = 30 * 1000;
 const NS_PER_SEC = 1e9;
 const MS_PER_NS = 1e6;
 
-const request = function (
-  { method = "GET", protocol, hostname, port, path, headers = {}, body } = {},
-  callback
-) {
-  assert(protocol, "options.protocol is required");
-  assert(
-    ["http:", "https:"].includes(protocol),
-    'options.protocol must be one of: "http:", "https:"'
-  );
-  assert(hostname, "options.hostname is required");
-  assert(callback, "callback is required");
+const request = function ({ method = 'GET', protocol, hostname, port, path, headers = {}, body } = {}, callback) {
+  assert(protocol, 'options.protocol is required');
+  assert(['http:', 'https:'].includes(protocol), 'options.protocol must be one of: "http:", "https:"');
+  assert(hostname, 'options.hostname is required');
+  assert(callback, 'callback is required');
 
   const eventTimes = {
     startAt: process.hrtime(),
@@ -30,7 +24,7 @@ const request = function (
     endAt: undefined,
   };
 
-  const req = (protocol.startsWith("https") ? https : http).request(
+  const req = (protocol.startsWith('https') ? https : http).request(
     {
       protocol,
       method,
@@ -40,18 +34,18 @@ const request = function (
       headers,
     },
     (res) => {
-      let responseBody = "";
+      let responseBody = '';
 
       req.setTimeout(TIMEOUT_IN_MILLISECONDS);
 
-      res.once("readable", () => {
+      res.once('readable', () => {
         eventTimes.firstByteAt = process.hrtime();
       });
-      res.on("data", (chunk) => {
+      res.on('data', (chunk) => {
         responseBody += chunk;
       });
 
-      res.on("end", () => {
+      res.on('end', () => {
         eventTimes.endAt = process.hrtime();
 
         callback(null, {
@@ -60,28 +54,28 @@ const request = function (
           body: responseBody,
         });
       });
-    }
+    },
   );
 
-  req.on("socket", (socket) => {
-    socket.on("lookup", () => {
+  req.on('socket', (socket) => {
+    socket.on('lookup', () => {
       eventTimes.dnsLookupAt = process.hrtime();
     });
-    socket.on("connect", () => {
+    socket.on('connect', () => {
       eventTimes.tcpConnectionAt = process.hrtime();
     });
-    socket.on("secureConnect", () => {
+    socket.on('secureConnect', () => {
       eventTimes.tlsHandshakeAt = process.hrtime();
     });
-    socket.on("timeout", () => {
+    socket.on('timeout', () => {
       req.abort();
 
-      const err = new Error("ETIMEDOUT");
-      err.code = "ETIMEDOUT";
+      const err = new Error('ETIMEDOUT');
+      err.code = 'ETIMEDOUT';
       callback(err);
     });
   });
-  req.on("error", callback);
+  req.on('error', callback);
 
   // Sending body
   if (body) {
@@ -96,39 +90,18 @@ const getTimings = function (eventTimes) {
     eventTimes.dnsLookupAt !== undefined
       ? getHrTimeDurationInMs(eventTimes.startAt, eventTimes.dnsLookupAt)
       : undefined;
-  var tcpConnection = getHrTimeDurationInMs(
-    eventTimes.dnsLookupAt || eventTimes.startAt,
-    eventTimes.tcpConnectionAt
-  );
+  var tcpConnection = getHrTimeDurationInMs(eventTimes.dnsLookupAt || eventTimes.startAt, eventTimes.tcpConnectionAt);
   var tlsHandshake =
     eventTimes.tlsHandshakeAt !== undefined
-      ? getHrTimeDurationInMs(
-          eventTimes.tcpConnectionAt,
-          eventTimes.tlsHandshakeAt
-        )
+      ? getHrTimeDurationInMs(eventTimes.tcpConnectionAt, eventTimes.tlsHandshakeAt)
       : undefined;
   var firstByte = getHrTimeDurationInMs(
     eventTimes.tlsHandshakeAt || eventTimes.tcpConnectionAt,
-    eventTimes.firstByteAt
-  );
-  var contentTransfer = getHrTimeDurationInMs(
     eventTimes.firstByteAt,
-    eventTimes.endAt
   );
+  var contentTransfer = getHrTimeDurationInMs(eventTimes.firstByteAt, eventTimes.endAt);
   var total = getHrTimeDurationInMs(eventTimes.startAt, eventTimes.endAt);
-  return (
-    dnsLookup +
-    "," +
-    tcpConnection +
-    "," +
-    tlsHandshake +
-    "," +
-    firstByte +
-    "," +
-    contentTransfer +
-    "," +
-    total
-  );
+  return dnsLookup + ',' + tcpConnection + ',' + tlsHandshake + ',' + firstByte + ',' + contentTransfer + ',' + total;
 };
 
 const getHrTimeDurationInMs = function (startTime, endTime) {
@@ -153,7 +126,7 @@ const doTiming = function (myurl, myheaders, count) {
           response.push(res.timings);
         }
         doTiming(myurl, myheaders, count - 1);
-      }
+      },
     );
   } else {
     return response;

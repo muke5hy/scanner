@@ -1,10 +1,10 @@
-"user strict";
+'user strict';
 
-const sslChecker = require("ssl-checker");
+const sslChecker = require('ssl-checker');
 
 const sslScan = async (url, results) => {
   var parser = new URL(url);
-  const host = parser["host"];
+  const host = parser['host'];
   await sslChecker
     .default(host)
     .then((log) => {
