@@ -25,19 +25,25 @@ const LighthouseReport = async (domain) => {
 
   // `.report` is the HTML report as a string
   const reportJson = runnerResult.report;
-  const reportHtml = runnerResult.report;
 
   let file_name = getHostname(domain);
   fs.writeFileSync(`./output/${file_name}.json`, reportJson);
 
   // `.lhr` is the Lighthouse Result as a JS object
   console.log("Report is done for", runnerResult.lhr.finalUrl);
-  console.log(
-    "Performance score was",
-    runnerResult.lhr.categories.performance.score * 100
+  // console.log("Performance score was", JSON.stringify(runnerResult.lhr));
+  fs.writeFileSync(
+    `./output/${file_name}-metrics.json`,
+    JSON.stringify(runnerResult.lhr)
   );
-
   await chrome.kill();
+
+  console.log(
+    `Lighthouse scores: ${Object.values(runnerResult.categories)
+      .map((c) => `${c.title} ${c.score}`)
+      .join(", ")}`
+  );
+  return runnerResult.lhr.categories.performance.score * 100;
 };
 
 module.exports = LighthouseReport;

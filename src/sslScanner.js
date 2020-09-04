@@ -9,7 +9,7 @@ const sslScan = async (url, results) => {
     .default(host)
     .then((log) => {
       results = { domain: host, ...log };
-      console.log(results);
+      // console.log(results);
       return results;
     })
     .catch(console.error);

@@ -139,6 +139,7 @@ const getHrTimeDurationInMs = function (startTime, endTime) {
   return diffInNanoSecond / MS_PER_NS;
 };
 
+var response = [];
 const doTiming = function (myurl, myheaders, count) {
   if (count > 0) {
     request(
@@ -146,10 +147,16 @@ const doTiming = function (myurl, myheaders, count) {
         headers: myheaders,
       }),
       (err, res) => {
-        console.log(err || res.timings);
+        if (err) {
+          console.log(err || res.timings);
+        } else {
+          response.push(res.timings);
+        }
         doTiming(myurl, myheaders, count - 1);
       }
     );
+  } else {
+    return response;
   }
 };
 // console.log('dnsLookup,tcpConnection,tlsHandshake,firstByte,contentTransfer,total')
