@@ -101,7 +101,14 @@ const getTimings = function (eventTimes) {
   );
   var contentTransfer = getHrTimeDurationInMs(eventTimes.firstByteAt, eventTimes.endAt);
   var total = getHrTimeDurationInMs(eventTimes.startAt, eventTimes.endAt);
-  return dnsLookup + ',' + tcpConnection + ',' + tlsHandshake + ',' + firstByte + ',' + contentTransfer + ',' + total;
+  return {
+    dnsLookup: dnsLookup,
+    tcpConnection: tcpConnection,
+    tlsHandshake: tlsHandshake,
+    firstByte: firstByte,
+    contentTransfer: contentTransfer,
+    total: total,
+  };
 };
 
 const getHrTimeDurationInMs = function (startTime, endTime) {
@@ -113,7 +120,7 @@ const getHrTimeDurationInMs = function (startTime, endTime) {
 };
 
 var response = [];
-const doTiming = function (myurl, myheaders, count) {
+const makeCall = function (myurl, myheaders, count) {
   if (count > 0) {
     request(
       Object.assign(url.parse(myurl), {
@@ -123,15 +130,19 @@ const doTiming = function (myurl, myheaders, count) {
         if (err) {
           console.log(err || res.timings);
         } else {
+          // console.log(err || res.timings);
           response.push(res.timings);
         }
         doTiming(myurl, myheaders, count - 1);
       },
     );
   } else {
+    // console.log(response);
     return response;
   }
 };
 // console.log('dnsLookup,tcpConnection,tlsHandshake,firstByte,contentTransfer,total')
+
+const doTiming = (domain) => makeCall(domain);
 
 module.exports = doTiming;

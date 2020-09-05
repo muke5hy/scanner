@@ -25,13 +25,15 @@ const start = async (req) => {
   // }
 
   const { time, lh, ssl, trace } = await Promise.all([
-    doTiming(domain, {}, 3),
-    LighthouseReport(domain),
-    sslScan(domain),
+    // doTiming(domain, {}, 3),
+    // LighthouseReport(domain),
+    // sslScan(domain),
     // tracer.trace(host),
   ]);
 
-  console.log(time);
+  const time1 = await doTiming(domain, {}, 3);
+
+  console.log('time 1', time1);
   console.log(lh);
   console.log(ssl);
   console.log(trace);
