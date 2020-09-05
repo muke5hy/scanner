@@ -33,14 +33,13 @@ const LighthouseReport = async (domain) => {
   console.log('Report is done for', runnerResult.lhr.finalUrl);
   // console.log("Performance score was", JSON.stringify(runnerResult.lhr));
   fs.writeFileSync(`./output/${file_name}-metrics.json`, JSON.stringify(runnerResult.lhr));
-  console.log(
-    `Lighthouse scores: ${Object.values(runnerResult.categories)
-      .map((c) => `${c.title} ${c.score}`)
-      .join(', ')}`,
-  );
+  // console.log(`Lighthouse scores: ${runnerResult.lhr.categories.map((c) => `${c.title} ${c.score}`).join(', ')}`);
   await chrome.kill();
 
-  return runnerResult.lhr.categories.performance.score * 100;
+  // return runnerResult.lhr.categories.performance.score * 100;
+  const res = {};
+  Object.entries(runnerResult.lhr.categories).map((c) => (res[c.id] = c.value));
+  return { lh: res };
 };
 
 module.exports = LighthouseReport;

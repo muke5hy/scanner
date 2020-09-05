@@ -120,7 +120,7 @@ const getHrTimeDurationInMs = function (startTime, endTime) {
 };
 
 var response = [];
-const makeCall = function (myurl, myheaders, count) {
+const doTiming = async function (myurl, myheaders, count) {
   if (count > 0) {
     request(
       Object.assign(url.parse(myurl), {
@@ -138,11 +138,20 @@ const makeCall = function (myurl, myheaders, count) {
     );
   } else {
     // console.log(response);
-    return response;
+    return { time: response };
   }
 };
 // console.log('dnsLookup,tcpConnection,tlsHandshake,firstByte,contentTransfer,total')
 
-const doTiming = (domain) => makeCall(domain);
+// const doTiming = (domain) =>
+//   new Promise((resolve, reject) => {
+//     try {
+//       const res = makeCall(domain);
+//       resolve(res);
+//     } catch (err) {
+//       reject('Error');
+//     }
+//   });
 
 module.exports = doTiming;
+// module.exports = makeCall;

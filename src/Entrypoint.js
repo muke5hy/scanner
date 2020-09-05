@@ -10,51 +10,43 @@ const start = async (req) => {
   const domain = req['domain'];
   const parser = new URL(domain);
   const host = parser['host'];
+  promises = [];
+  if (req.time) {
+    promises.push(doTiming(domain, {}, 3));
+  }
+  if (req.lighthouse) {
+    promises.push(LighthouseReport(domain));
+  }
+  if (req.ssl) {
+    promises.push(sslScan(domain));
+  }
+  if (req.traceroute) {
+    promises.push(tracer.trace(host));
+  }
 
-  // if (req.time) {
-  //   doTiming(domain, {}, 3);
-  // }
-  // if (req.lighthouse) {
-  //   LighthouseReport(domain);
-  // }
-  // if (req.ssl) {
-  //   sslScan(domain);
-  // }
-  // if (req.ssl) {
-  //   tracer.trace(host);
-  // }
+  await Promise.all(promises).then(function (result) {
+    for (var i = 0; i < result.length; i++) {
+      console.log(result[i]);
+    }
 
-  const { time, lh, ssl, trace } = await Promise.all([
-    // doTiming(domain, {}, 3),
-    // LighthouseReport(domain),
-    // sslScan(domain),
-    // tracer.trace(host),
-  ]);
-
-  const time1 = await doTiming(domain, {}, 3);
-
-  console.log('time 1', time1);
-  console.log(lh);
-  console.log(ssl);
-  console.log(trace);
-
-  return { time, lh, ssl, trace };
+    return result;
+  });
 };
 
 req = {
   domain: 'https://tikinfluencers.com',
   time: true,
-  lighthouse: true,
+  lighthouse: false,
   ssl: true,
-  traceroute: true,
+  traceroute: false,
 };
 
 start(req)
-  .then(({ time, lh, ssl, trace }) => {
-    console.log(time);
-    console.log(lh);
-    console.log(ssl);
-    console.log(trace);
+  .then((res) => {
+    console.log(res);
+    Object.entries(res).map((c) => {
+      console.log(c);
+    });
   })
   .catch((err) => {
     console.log(err);
