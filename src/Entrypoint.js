@@ -26,9 +26,9 @@ const start = async (req) => {
 
   await Promise.all(promises).then(function (result) {
     for (var i = 0; i < result.length; i++) {
-      console.log(result[i]);
+      console.log(i, result[i]);
     }
-
+    console.log(result);
     return result;
   });
 };

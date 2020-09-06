@@ -120,26 +120,44 @@ const getHrTimeDurationInMs = function (startTime, endTime) {
 };
 
 var response = [];
+// const doTiming = async function (myurl, myheaders, count) {
+//   if (count > 0) {
+//     request(
+//       Object.assign(url.parse(myurl), {
+//         headers: myheaders,
+//       }),
+//       (err, res) => {
+//         if (err) {
+//           console.log(err || res.timings);
+//         } else {
+//           // console.log(err || res.timings);
+//           response.push(res.timings);
+//         }
+//         doTiming(myurl, myheaders, count - 1);
+//       },
+//     );
+//   } else {
+//     // console.log(response);
+//     return { time: response };
+//   }
+// };
+
 const doTiming = async function (myurl, myheaders, count) {
-  if (count > 0) {
-    request(
-      Object.assign(url.parse(myurl), {
-        headers: myheaders,
-      }),
-      (err, res) => {
-        if (err) {
-          console.log(err || res.timings);
-        } else {
-          // console.log(err || res.timings);
-          response.push(res.timings);
-        }
-        doTiming(myurl, myheaders, count - 1);
-      },
-    );
-  } else {
-    // console.log(response);
-    return { time: response };
-  }
+  request(
+    Object.assign(url.parse(myurl), {
+      headers: myheaders,
+    }),
+    (err, res) => {
+      if (err) {
+        console.log(err || res.timings);
+      } else {
+        // console.log(err || res.timings);
+        // console.log(res.timings);
+        response.push(res.timings);
+        return { time: res.timings };
+      }
+    },
+  );
 };
 // console.log('dnsLookup,tcpConnection,tlsHandshake,firstByte,contentTransfer,total')
 
